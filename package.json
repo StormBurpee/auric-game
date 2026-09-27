@@ -1,0 +1,34 @@
+{
+  "name": "auric",
+  "private": true,
+  "version": "0.1.0",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22.16.0"
+  },
+  "files": [
+    "src",
+    "tests",
+    "docs",
+    "index.html",
+    "tsconfig.json",
+    "vite.config.ts",
+    "PROVENANCE.md",
+    "THIRD_PARTY.md"
+  ],
+  "type": "module",
+  "description": "AURIC — An Ambervale Story. A monster-taming adventure for the web, in loving homage to the golden age of handheld RPGs.",
+  "scripts": {
+    "dev": "vite",
+    "build": "npm run typecheck && vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "typescript": "^6.0.3",
+    "vite": "^8.0.16",
+    "vitest": "^4.1.11"
+  }
+}

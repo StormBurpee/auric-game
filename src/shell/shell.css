@@ -1,0 +1,586 @@
+/**
+ * STORMBOY COLOR — atomic-purple translucent handheld, all CSS/SVG.
+ *
+ * Layout contract with shell.ts: `--sb-chrome-w` / `--sb-chrome-h` on
+ * .sb-stage declare the total non-canvas space (paddings, gaps, control
+ * columns, hint line) for the current orientation. The JS reads them to
+ * pick the largest integer canvas scale that fits, so any padding/gap
+ * change here must keep those budgets honest (they carry a little slack).
+ *
+ * Layer order inside .sb-shell: circuit board (z 0, under the plastic),
+ * body gloss ::after (z 1), everything functional (z 2, set by the
+ * `.sb-shell > *` rule and refined per part below).
+ */
+
+/* ---- page: deep night ------------------------------------------------ */
+
+:root {
+  color-scheme: dark;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background:
+    radial-gradient(1100px 700px at 50% 38%, rgba(94, 58, 160, 0.16), transparent 65%),
+    linear-gradient(180deg, #0d0a14 0%, #1a1326 100%);
+  background-color: #0d0a14;
+  background-attachment: fixed;
+}
+
+/* ---- stage ------------------------------------------------------------ */
+
+.sb-stage {
+  --sb-chrome-w: 376;
+  --sb-chrome-h: 240;
+  box-sizing: border-box;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  justify-content: safe center;
+  gap: 14px;
+  padding: 12px;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ---- the body --------------------------------------------------------- */
+
+.sb-shell {
+  position: relative;
+  display: grid;
+  grid-template-areas:
+    'pad screen ab'
+    'pad meta ab';
+  grid-template-columns: 108px auto 132px;
+  grid-template-rows: auto auto;
+  gap: 16px;
+  align-items: center;
+  justify-items: center;
+  padding: 20px;
+  border-radius: 24px 24px 36px 36px;
+  background: linear-gradient(160deg, #5d3994 0%, #482970 45%, #351d54 100%);
+  box-shadow:
+    0 24px 60px rgba(0, 0, 0, 0.55),
+    0 0 120px 16px rgba(128, 80, 212, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.22),
+    inset 0 -3px 8px rgba(10, 4, 24, 0.55),
+    inset 2px 0 6px rgba(255, 255, 255, 0.06),
+    inset -2px 0 6px rgba(10, 4, 24, 0.35);
+}
+
+.sb-shell > * {
+  position: relative;
+  z-index: 2;
+}
+
+/* Circuit board ghosting through the translucent plastic. */
+.sb-circuit {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: inherit;
+  overflow: hidden;
+  opacity: 0.1;
+  pointer-events: none;
+}
+
+.sb-circuit svg {
+  display: block;
+}
+
+/* Moulded gloss across the plastic. */
+.sb-shell::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(
+    160deg,
+    rgba(255, 255, 255, 0.16) 0%,
+    rgba(255, 255, 255, 0.05) 22%,
+    rgba(255, 255, 255, 0) 46%,
+    rgba(20, 8, 40, 0.16) 86%,
+    rgba(0, 0, 0, 0.26) 100%
+  );
+}
+
+/* ---- chassis details: IR window, screws, speaker ----------------------- */
+
+.sb-ir {
+  position: absolute;
+  top: 5px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40px;
+  height: 6px;
+  border-radius: 3px;
+  background: linear-gradient(180deg, #1c0f22, #3a1430);
+  box-shadow:
+    inset 0 1px 2px rgba(0, 0, 0, 0.9),
+    0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.sb-screw {
+  position: absolute;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #6b6280, #2b2438 70%);
+  box-shadow:
+    inset 0 1px 2px rgba(0, 0, 0, 0.8),
+    0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.sb-screw::after {
+  content: '';
+  position: absolute;
+  left: 1.5px;
+  right: 1.5px;
+  top: 50%;
+  height: 1px;
+  margin-top: -0.5px;
+  background: rgba(8, 4, 16, 0.85);
+  transform: rotate(38deg);
+}
+
+.sb-screw-tl { left: 6px; top: 6px; }
+.sb-screw-tr { right: 6px; top: 6px; }
+.sb-screw-bl { left: 6px; bottom: 6px; }
+.sb-screw-br { right: 6px; bottom: 6px; }
+
+.sb-speaker {
+  position: absolute;
+  right: 20px;
+  bottom: 16px;
+  display: flex;
+  gap: 8px;
+  transform: rotate(-28deg);
+}
+
+.sb-speaker span {
+  width: 5px;
+  height: 34px;
+  border-radius: 3px;
+  background: linear-gradient(180deg, #0b0712, #1a1126);
+  box-shadow:
+    inset 0 1px 3px rgba(0, 0, 0, 0.9),
+    0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+/* ---- bezel + screen ----------------------------------------------------- */
+
+.sb-bezel {
+  grid-area: screen;
+  padding: 12px 16px 10px;
+  border-radius: 12px 12px 44px 12px;
+  background: linear-gradient(170deg, #2e2838 0%, #17131f 55%, #221c2e 100%);
+  box-shadow:
+    inset 0 2px 6px rgba(0, 0, 0, 0.7),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.05),
+    0 1px 0 rgba(255, 255, 255, 0.1),
+    0 4px 14px rgba(0, 0, 0, 0.45);
+}
+
+.sb-bezel-top {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  min-height: 20px;
+  margin-bottom: 8px;
+}
+
+.sb-led-block {
+  justify-self: start;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.sb-led {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #3c1626;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.7);
+  transition: background 0.9s ease, box-shadow 0.9s ease;
+}
+
+.sb-led.on {
+  background: radial-gradient(circle at 38% 32%, #ffb3bd, #ee2747 55%, #97122b);
+  box-shadow:
+    0 0 9px 2px rgba(255, 46, 86, 0.6),
+    inset 0 1px 1px rgba(255, 255, 255, 0.5);
+  animation: sb-led-breathe 3.2s ease-in-out 1s infinite;
+}
+
+@keyframes sb-led-breathe {
+  0%,
+  100% {
+    box-shadow:
+      0 0 9px 2px rgba(255, 46, 86, 0.6),
+      inset 0 1px 1px rgba(255, 255, 255, 0.5);
+  }
+  50% {
+    box-shadow:
+      0 0 5px 1px rgba(255, 46, 86, 0.38),
+      inset 0 1px 1px rgba(255, 255, 255, 0.5);
+  }
+}
+
+.sb-led-label {
+  font: 700 7px/1 Verdana, 'Segoe UI', system-ui, sans-serif;
+  letter-spacing: 0.22em;
+  color: #6c6184;
+}
+
+.sb-wordmark {
+  font: italic 800 12px/1 Verdana, 'Segoe UI', system-ui, sans-serif;
+  letter-spacing: 0.12em;
+  color: #d8d1e8;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.6);
+  white-space: nowrap;
+}
+
+.sb-color {
+  margin-left: 0.55em;
+}
+
+.sb-color span:nth-child(1) { color: #e8493e; }
+.sb-color span:nth-child(2) { color: #f0a73e; }
+.sb-color span:nth-child(3) { color: #58bf52; }
+.sb-color span:nth-child(4) { color: #4a90dd; }
+.sb-color span:nth-child(5) { color: #a35bd6; }
+
+.sb-screen {
+  position: relative;
+  margin: 0 auto;
+  width: fit-content;
+  line-height: 0;
+  border-radius: 3px;
+  overflow: hidden;
+  box-shadow:
+    0 0 0 2px #07050c,
+    0 0 0 3px rgba(255, 255, 255, 0.04);
+}
+
+.sb-screen canvas {
+  display: block;
+  image-rendering: pixelated;
+}
+
+.sb-glass {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.sb-model {
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font: italic 700 10px/1.2 Verdana, 'Segoe UI', system-ui, sans-serif;
+  color: #c9a64f;
+}
+
+.sb-model span {
+  letter-spacing: 0.5em;
+  margin-right: -0.5em;
+}
+
+.sb-model::before,
+.sb-model::after {
+  content: '';
+  height: 1px;
+  width: 34px;
+  background: linear-gradient(90deg, transparent, rgba(201, 166, 79, 0.45));
+}
+
+.sb-model::after {
+  background: linear-gradient(270deg, transparent, rgba(201, 166, 79, 0.45));
+}
+
+/* ---- buttons, shared ----------------------------------------------------- */
+
+.sb-shell button {
+  padding: 0;
+  margin: 0;
+  border: 0;
+  cursor: pointer;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.04s linear, filter 0.04s linear;
+  font-family: Verdana, 'Segoe UI', system-ui, sans-serif;
+}
+
+.sb-shell button.is-down,
+.sb-shell button:active {
+  transform: translateY(1px);
+  filter: brightness(0.78);
+}
+
+@media (hover: hover) {
+  .sb-shell button:hover:not(.is-down):not(:active) {
+    filter: brightness(1.1);
+  }
+}
+
+.sb-shell button:focus-visible {
+  outline: 2px solid #a98ce8;
+  outline-offset: 3px;
+}
+
+/* ---- D-pad ---------------------------------------------------------------- */
+
+.sb-dpad {
+  grid-area: pad;
+  position: relative;
+  width: 102px;
+  height: 102px;
+  touch-action: none;
+  filter: drop-shadow(0 3px 3px rgba(8, 3, 16, 0.5));
+}
+
+.sb-dpad-arm {
+  position: absolute;
+  width: 34px;
+  height: 34px;
+  background: linear-gradient(180deg, #38323f, #211c2a);
+  box-shadow:
+    0 2px 0 rgba(5, 2, 12, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.14);
+}
+
+.sb-dpad-up { left: 34px; top: 0; border-radius: 7px 7px 0 0; }
+.sb-dpad-down { left: 34px; top: 68px; border-radius: 0 0 7px 7px; }
+.sb-dpad-left { left: 0; top: 34px; border-radius: 7px 0 0 7px; }
+.sb-dpad-right { left: 68px; top: 34px; border-radius: 0 7px 7px 0; }
+
+/* Moulded direction arrows. */
+.sb-dpad-arm::before {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 0;
+  border: 5px solid transparent;
+}
+
+.sb-dpad-up::before {
+  left: 50%;
+  top: 9px;
+  transform: translateX(-50%);
+  border-top: 0;
+  border-bottom: 7px solid rgba(10, 6, 16, 0.5);
+}
+
+.sb-dpad-down::before {
+  left: 50%;
+  bottom: 9px;
+  transform: translateX(-50%);
+  border-bottom: 0;
+  border-top: 7px solid rgba(10, 6, 16, 0.5);
+}
+
+.sb-dpad-left::before {
+  top: 50%;
+  left: 9px;
+  transform: translateY(-50%);
+  border-left: 0;
+  border-right: 7px solid rgba(10, 6, 16, 0.5);
+}
+
+.sb-dpad-right::before {
+  top: 50%;
+  right: 9px;
+  transform: translateY(-50%);
+  border-right: 0;
+  border-left: 7px solid rgba(10, 6, 16, 0.5);
+}
+
+/* Centre cap with the thumb dimple; painted last so it hides arm seams. */
+.sb-dpad-center {
+  position: absolute;
+  left: 34px;
+  top: 34px;
+  width: 34px;
+  height: 34px;
+  background: linear-gradient(180deg, #2f2a39, #262130);
+  pointer-events: none;
+}
+
+.sb-dpad-center::before {
+  content: '';
+  position: absolute;
+  inset: 7px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 38%, #17131e 0%, #241f2d 55%, #353041 100%);
+  box-shadow:
+    inset 0 2px 3px rgba(0, 0, 0, 0.55),
+    0 1px 0 rgba(255, 255, 255, 0.07);
+}
+
+/* ---- A / B cluster (angled like the hardware: A upper-right of B) --------- */
+
+.sb-ab {
+  grid-area: ab;
+  position: relative;
+  width: 112px;
+  height: 82px;
+  transform: rotate(-24deg);
+  touch-action: none;
+  filter: drop-shadow(0 3px 4px rgba(8, 3, 16, 0.45));
+}
+
+.sb-btn {
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #c2517f 0%, #8e2b56 55%, #5f173a 100%);
+  box-shadow:
+    0 3px 0 rgba(40, 5, 26, 0.8),
+    inset 0 2px 2px rgba(255, 255, 255, 0.28),
+    inset 0 -3px 4px rgba(20, 2, 14, 0.5);
+  color: rgba(255, 230, 242, 0.78);
+  font-size: 15px;
+  font-weight: 800;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.45);
+}
+
+.sb-btn-a { right: 0; top: 0; }
+.sb-btn-b { left: 0; bottom: 0; }
+
+/* ---- START / SELECT --------------------------------------------------------- */
+
+.sb-meta {
+  grid-area: meta;
+  display: flex;
+  gap: 26px;
+  padding: 6px 0;
+  touch-action: none;
+}
+
+.sb-pill-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  transform: rotate(-24deg);
+}
+
+.sb-pill {
+  width: 54px;
+  height: 15px;
+  border-radius: 8px;
+  background: linear-gradient(180deg, #453d52, #262031);
+  box-shadow:
+    0 2px 0 rgba(5, 2, 12, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.16),
+    inset 0 0 0 1px rgba(0, 0, 0, 0.35);
+}
+
+.sb-pill-label {
+  font: 700 8px/1 Verdana, 'Segoe UI', system-ui, sans-serif;
+  letter-spacing: 0.2em;
+  color: #b3a7cc;
+  text-shadow: 0 1px 0 rgba(10, 4, 24, 0.6);
+}
+
+/* ---- hint -------------------------------------------------------------------- */
+
+.sb-hint {
+  margin: 0;
+  padding: 0 12px;
+  font: 500 11px/1.5 ui-monospace, 'Cascadia Mono', Consolas, monospace;
+  letter-spacing: 0.03em;
+  color: #5a5172;
+  text-align: center;
+}
+
+/* ---- portrait phones: screen on top, controls below ---------------------------- */
+
+@media (orientation: portrait) {
+  .sb-stage {
+    --sb-chrome-w: 52;
+    --sb-chrome-h: 328;
+    padding: 12px 6px;
+  }
+
+  .sb-shell {
+    grid-template-areas:
+      'screen screen'
+      'pad ab'
+      'meta meta';
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto auto;
+    gap: 12px;
+    padding: 12px 10px 16px;
+    border-radius: 22px 22px 30px 30px;
+  }
+
+  .sb-bezel {
+    padding: 10px 9px 8px;
+    border-radius: 10px 10px 32px 10px;
+  }
+
+  .sb-dpad {
+    justify-self: start;
+    margin-left: 4px;
+  }
+
+  .sb-ab {
+    justify-self: end;
+    margin-right: 8px;
+  }
+
+  .sb-meta {
+    padding: 2px 0 6px;
+  }
+
+  .sb-speaker {
+    right: 14px;
+    bottom: 10px;
+    gap: 7px;
+  }
+
+  .sb-speaker span {
+    height: 28px;
+  }
+
+  .sb-screw-tl { left: 5px; top: 5px; }
+  .sb-screw-tr { right: 5px; top: 5px; }
+  .sb-screw-bl { left: 5px; bottom: 5px; }
+  .sb-screw-br { right: 5px; bottom: 5px; }
+}
+
+/* ---- reduced motion --------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .sb-shell button {
+    transition: none;
+  }
+
+  .sb-led {
+    transition: none;
+  }
+
+  .sb-led.on {
+    animation: none;
+  }
+}
