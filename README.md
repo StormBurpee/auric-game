@@ -4,6 +4,8 @@
 
 Explore Ambervale, choose a companion, catch wild Kindra and earn the first badge. The world changes with the local clock: different creatures appear after dark, towns change palette, and weekly events give familiar places another reason to visit.
 
+**[Play the prototype in your browser](https://stormburpee.github.io/auric-game/)** · No account or installation required.
+
 <p>
   <img src="docs/screenshots/title-current.png" width="300" alt="Current AURIC title screen in its purple handheld shell" />
   <img src="docs/screenshots/dawnfern-day.png" width="240" alt="Exploring Dawnfern Village" />
